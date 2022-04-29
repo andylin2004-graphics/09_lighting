@@ -1,10 +1,18 @@
 use crate::Color;
 use crate::Matrix;
 
-// //vector functions
-// //normalize vetor, should modify the parameter
-// fn normalize() {
-// }
+//vector functions
+//normalize vetor, should modify the parameter
+pub fn normalize(vector: &mut Vec<f32>) {
+  let mut m = 0.0;
+  for i in 0..vector.len(){
+    m += vector[i].powi(2);
+  }
+  m = m.sqrt();
+  for i in 0..vector.len(){
+    vector[i] /= m;
+  }
+}
 
 // //Return the dot porduct of a . b
 // fn dot_product(a, double *b ) {
@@ -81,15 +89,15 @@ pub fn calculate_ambient(ambient_light: Color, ambient_reflect: f32) -> Color {
   return a;
 }
 
-// pub fn calculate_diffuse(
-//   diffuse_light_location: &mut Vec<f32>,
-//   diffuse_light_color: Color,
-//   diffuse_reflect: f32,
-//   normal: f32,
-// ) -> Color {
-//   let d: Color;
-//   return d;
-// }
+pub fn calculate_diffuse(
+  diffuse_light_location: &mut Vec<f32>,
+  diffuse_light_color: Color,
+  diffuse_reflect: f32,
+  normal: f32,
+) -> Color {
+  let d: Color;
+  return d;
+}
 
 // color calculate_specular(double light[2][3], double *sreflect, double *view, double *normal ) {
 
