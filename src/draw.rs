@@ -2,6 +2,7 @@ use crate::Color;
 use crate::CurveType;
 use crate::Image;
 use crate::Matrix;
+use crate::gmath;
 use std::f32;
 use rand::Rng;
 
@@ -147,30 +148,7 @@ impl Image {
     ///====================
     pub fn draw_polygons(&mut self, polygons: &Matrix, c: Color) {
         for i in (0..polygons.matrix_array[0].len()).step_by(3) {
-            let x0 = polygons.matrix_array[0][i];
-            let y0 = polygons.matrix_array[1][i];
-            let z0 = polygons.matrix_array[2][i];
-            let x1 = polygons.matrix_array[0][i + 1];
-            let y1 = polygons.matrix_array[1][i + 1];
-            let z1 = polygons.matrix_array[2][i + 1];
-            let x2 = polygons.matrix_array[0][i + 2];
-            let y2 = polygons.matrix_array[1][i + 2];
-            let z2 = polygons.matrix_array[2][i + 2];
-            let ax = x1 - x0;
-            let ay = y1 - y0;
-            let az = z1 - z0;
-            let bx = x2 - x0;
-            let by = y2 - y0;
-            let bz = z2 - z0;
-            let nx = ay * bz - az * by;
-            let ny = az * bx - ax * bz;
-            let nz = ax * by - ay * bx;
-            let vx = 0.0;
-            let vy = 0.0;
-            let vz = 1.0;
-            // let dot_n_v = 1.0;
-            let dot_n_v = nx * vx + ny * vy + nz * vz;
-            if dot_n_v > 0.0 {
+            if polygons.calculate_normal(i) > 0.0 {
                 // self.draw_line(
                 //     polygons.matrix_array[0][i] as i32,
                 //     polygons.matrix_array[1][i] as i32,
