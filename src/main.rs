@@ -5,6 +5,7 @@ use matrix::Matrix;
 use parser::parse_file;
 use std::env;
 use rand::Rng;
+mod gmath;
 mod color;
 mod draw;
 mod image;
