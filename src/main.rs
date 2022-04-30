@@ -4,6 +4,7 @@ use matrix::CurveType;
 use matrix::Matrix;
 use parser::parse_file;
 use std::env;
+use reflect::ReflectionValue;
 use rand::Rng;
 mod gmath;
 mod color;
@@ -11,6 +12,7 @@ mod draw;
 mod image;
 mod matrix;
 mod parser;
+mod reflect;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

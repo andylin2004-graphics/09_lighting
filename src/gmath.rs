@@ -1,5 +1,6 @@
 use crate::Color;
 use crate::Matrix;
+use crate::ReflectionValue;
 use std::cmp;
 
 //vector functions
@@ -77,14 +78,11 @@ pub fn get_lighting(
   // return i;
 }
 
-pub fn calculate_ambient(ambient_light: Color, ambient_reflect: f32) -> Color {
-  let r = (ambient_light.r as f32 * ambient_reflect) as u8;
-  let g = (ambient_light.g as f32 * ambient_reflect) as u8;
-  let b = (ambient_light.b as f32 * ambient_reflect) as u8;
+pub fn calculate_ambient(ambient_light: Color, ambient_reflect: ReflectionValue) -> Color {
   let a = Color::new_color(
-    (ambient_light.r as f32 * ambient_reflect) as u8,
-    (ambient_light.g as f32 * ambient_reflect) as u8,
-    (ambient_light.b as f32 * ambient_reflect) as u8,
+    (ambient_light.r as f32 * ambient_reflect.r) as u8,
+    (ambient_light.g as f32 * ambient_reflect.g) as u8,
+    (ambient_light.b as f32 * ambient_reflect.b) as u8,
   );
   return a;
 }
@@ -92,23 +90,20 @@ pub fn calculate_ambient(ambient_light: Color, ambient_reflect: f32) -> Color {
 pub fn calculate_diffuse(
   diffuse_light_location: &mut Vec<f32>,
   diffuse_light_color: Color,
-  diffuse_reflect: f32,
+  diffuse_reflect: ReflectionValue,
   normal: &mut Vec<f32>,
 ) -> Color {
-  // let d: Color::new_color(r: u8, g: u8, b: u8);
   normalize(diffuse_light_location);
   normalize(normal);
-  let n_l_dot_product_times_reflect = dot_product(normal, diffuse_light_location) * diffuse_reflect;
+  let n_l_dot_product_times = dot_product(normal, diffuse_light_location);
   let color = Color::new_color(
-    ((n_l_dot_product_times_reflect * diffuse_light_color.r as f32) as i32 % 256) as u8,
-    ((n_l_dot_product_times_reflect * diffuse_light_color.g as f32) as i32 % 256) as u8,
-    ((n_l_dot_product_times_reflect * diffuse_light_color.b as f32) as i32 % 256) as u8,
+    ((n_l_dot_product_times * diffuse_reflect.r * diffuse_light_color.r as f32) as i32 % 256) as u8,
+    ((n_l_dot_product_times * diffuse_reflect.g * diffuse_light_color.g as f32) as i32 % 256) as u8,
+    ((n_l_dot_product_times * diffuse_reflect.b * diffuse_light_color.b as f32) as i32 % 256) as u8,
   );
   return color;
 }
 
-// color calculate_specular(double light[2][3], double *sreflect, double *view, double *normal ) {
+pub fn calculate_specular(specular_light_location: &mut Vec<f32>, specular_light_color: Color, specular_reflect: ReflectionValue, view: &Vec<f32>, normal: &Vec<f32> ) -> Color{
 
-//   color s;
-//   return s;
-// }
+}
