@@ -112,7 +112,3 @@ pub fn calculate_diffuse(
 //   color s;
 //   return s;
 // }
-
-//limit each component of c to a max of 255
-// pub fn limit_color( color * c ) {
-// }
