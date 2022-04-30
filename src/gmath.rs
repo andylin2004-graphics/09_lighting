@@ -67,6 +67,15 @@ impl Matrix {
   }
 }
 
+impl Color{
+  fn color_with_lighting(constant: f32, light_color: Color, reflect: ReflectionValue) -> Color{
+    Color{
+      r: (constant * light_color.r as f32 * reflect.r) as u8,
+      g: (constant * light_color.g as f32 * reflect.g) as u8,
+      b: (constant * light_color.b as f32 * reflect.b) as u8
+    }
+  }
+}
 /*============================================
 IMPORANT NOTE
 
