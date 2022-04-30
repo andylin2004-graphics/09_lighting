@@ -2,6 +2,8 @@ use crate::Color;
 use crate::Matrix;
 use crate::ReflectionValue;
 use std::cmp;
+use std::ops::Add;
+use std::ops::Mul;
 
 //vector functions
 //normalize vector, should modify the parameter
@@ -77,6 +79,18 @@ impl Color {
   }
 }
 
+impl Add for Color {
+  type Output = Self;
+
+  fn add(self, other: Self) -> Self {
+    Self {
+      r: ((self.r as i32 + other.r as i32) % 256) as u8,
+      g: ((self.g as i32 + other.g as i32) % 256) as u8,
+      b: ((self.b as i32 + other.b as i32) % 256) as u8,
+    }
+  }
+}
+
 /*============================================
 IMPORANT NOTE
 
@@ -101,7 +115,7 @@ pub fn get_lighting(
   ambient_reflect: ReflectionValue,
   diffuse_reflect: ReflectionValue,
   specular_reflect: ReflectionValue,
-) {
+) -> Color {
   normalize(normal);
   normalize(point_light_vector);
   let ambient_color = calculate_ambient(ambient_light, ambient_reflect);
@@ -118,6 +132,7 @@ pub fn get_lighting(
     view,
     normal,
   );
+  return ambient_color + diffuse_color + speculalar_color;
 }
 
 pub fn calculate_ambient(ambient_light: Color, ambient_reflect: ReflectionValue) -> Color {
@@ -142,7 +157,10 @@ pub fn calculate_specular(
   normalized_normal: &mut Vec<f32>,
 ) -> Color {
   let calculation_before_color_and_light = &mut vector_subtraction(
-    &mut vector_times_scalar(normalized_normal, 2.0 * dot_product(normalized_normal, normalized_specular_light_vector)),
+    &mut vector_times_scalar(
+      normalized_normal,
+      2.0 * dot_product(normalized_normal, normalized_specular_light_vector),
+    ),
     normalized_specular_light_vector,
   );
   normalize(view);
