@@ -25,6 +25,23 @@ pub fn dot_product(lhs: &Vec<f32>, rhs: &Vec<f32>) -> f32 {
   return result;
 }
 
+// modify the param vector when the vector is multiplied by a scalar
+pub fn vector_times_scalar(vector: &mut Vec<f32>, scalar: f32) -> Vec<f32>{
+  let mut result = vector.clone();
+  for i in 0..result.len(){
+    result[i] *= scalar;
+  }
+  return result;
+}
+
+pub fn vector_subtraction(lhs: &mut Vec<f32>, rhs: &mut Vec<f32>) -> Vec<f32>{
+  let mut result = lhs.clone();
+  for i in 0..result.len(){
+    result[i] -= rhs[i];
+  }
+  return result;
+}
+
 impl Matrix {
   //Calculate the surface normal for the triangle whose first
   //point is located at index i in polygons
