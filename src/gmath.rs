@@ -1,8 +1,9 @@
 use crate::Color;
 use crate::Matrix;
+use std::cmp;
 
 //vector functions
-//normalize vetor, should modify the parameter
+//normalize vector, should modify the parameter
 pub fn normalize(vector: &mut Vec<f32>) {
   let mut m = 0.0;
   for i in 0..vector.len(){
@@ -14,10 +15,14 @@ pub fn normalize(vector: &mut Vec<f32>) {
   }
 }
 
-// //Return the dot porduct of a . b
-// fn dot_product(a, double *b ) {
-//   return  0;
-// }
+// Return the dot product of a . b
+pub fn dot_product(lhs: &Vec<f32>, rhs: &Vec<f32> ) -> f32{
+  let mut result = 0.0;
+  for i in 0..cmp::min(lhs.len(), rhs.len()){
+    result += lhs[i] * rhs[i];
+  }
+  return result;
+}
 
 impl Matrix{
   //Calculate the surface normal for the triangle whose first
@@ -38,14 +43,9 @@ impl Matrix{
     let bx = x2 - x0;
     let by = y2 - y0;
     let bz = z2 - z0;
-    let nx = ay * bz - az * by;
-    let ny = az * bx - ax * bz;
-    let nz = ax * by - ay * bx;
-    let vx = 0.0;
-    let vy = 0.0;
-    let vz = 1.0;
-    let dot_n_v = nx * vx + ny * vy + nz * vz;
-    return dot_n_v;
+    let n = vec![ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
+    let v = vec![0.0, 0.0, 1.0];
+    return dot_product(&n, &v);
   }
 }
 
