@@ -76,6 +76,7 @@ impl Color{
     }
   }
 }
+
 /*============================================
 IMPORANT NOTE
 
@@ -105,31 +106,25 @@ pub fn get_lighting(
 }
 
 pub fn calculate_ambient(ambient_light: Color, ambient_reflect: ReflectionValue) -> Color {
-  let a = Color::new_color(
-    (ambient_light.r as f32 * ambient_reflect.r) as u8,
-    (ambient_light.g as f32 * ambient_reflect.g) as u8,
-    (ambient_light.b as f32 * ambient_reflect.b) as u8,
-  );
-  return a;
+  return Color::color_with_lighting(1.0, ambient_light, ambient_reflect);
 }
 
 pub fn calculate_diffuse(
-  diffuse_light_location: &mut Vec<f32>,
+  diffuse_light_vector: &mut Vec<f32>,
   diffuse_light_color: Color,
   diffuse_reflect: ReflectionValue,
   normal: &mut Vec<f32>,
 ) -> Color {
-  normalize(diffuse_light_location);
+  normalize(diffuse_light_vector);
   normalize(normal);
-  let n_l_dot_product_times = dot_product(normal, diffuse_light_location);
-  let color = Color::new_color(
-    ((n_l_dot_product_times * diffuse_reflect.r * diffuse_light_color.r as f32) as i32 % 256) as u8,
-    ((n_l_dot_product_times * diffuse_reflect.g * diffuse_light_color.g as f32) as i32 % 256) as u8,
-    ((n_l_dot_product_times * diffuse_reflect.b * diffuse_light_color.b as f32) as i32 % 256) as u8,
-  );
-  return color;
+  let n_l_dot_product_times = dot_product(normal, diffuse_light_vector);
+  return Color::color_with_lighting(n_l_dot_product_times, diffuse_light_color, diffuse_reflect);
 }
 
-pub fn calculate_specular(specular_light_location: &mut Vec<f32>, specular_light_color: Color, specular_reflect: ReflectionValue, view: &Vec<f32>, normal: &Vec<f32> ) -> Color{
-
+pub fn calculate_specular(specular_light_vector: &mut Vec<f32>, specular_light_color: Color, specular_reflect: ReflectionValue, view: &Vec<f32>, normal: &mut Vec<f32> ) -> Color{
+  normalize(normal);
+  normalize(specular_light_vector);
+  let calculation_before_color_and_light = &mut vector_subtraction(&mut vector_times_scalar(normal, 2.0 * dot_product(normal, specular_light_vector)), specular_light_vector);
+  let calculation_before_color = dot_product(calculation_before_color_and_light, view);
+  return Color::color_with_lighting(calculation_before_color, specular_light_color, specular_reflect);
 }
