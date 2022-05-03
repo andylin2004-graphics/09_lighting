@@ -1,13 +1,14 @@
+use crate::ReflectionValue;
 use crate::Color;
 use crate::CurveType;
 use crate::Image;
 use crate::Matrix;
-use crate::gmath;
+use crate::gmath::*;
 use std::f32;
 use rand::Rng;
 
 impl Image {
-    pub fn draw_line(&mut self, mut x0: i32, mut y0: i32, mut z0: f32, mut x1: i32, mut y1: i32, mut z1: f32, color: Color) {
+    pub fn draw_line(&mut self, mut x0: i32, mut y0: i32, mut z0: f32, mut x1: i32, mut y1: i32, mut z1: f32, color: &Color) {
         println!("x0: {}, y0: {}, x1: {}, y1: {}", x0, y0, x1, y1);
         if (x0 >= 500 &&  x1 >= 500) || (y0 >= 500 && y1 >= 500) || (x0 < 0 &&  x1 < 0) || (y0 < 0 && y1 < 0){
             return;
@@ -119,7 +120,7 @@ impl Image {
         }
     }
 
-    pub fn draw_lines(&mut self, matrix: &Matrix, color: Color) {
+    pub fn draw_lines(&mut self, matrix: &Matrix, color: &Color) {
         for i in (0..matrix.matrix_array[0].len()).step_by(2) {
             self.draw_line(
                 matrix.matrix_array[0][i] as i32,
@@ -146,9 +147,10 @@ impl Image {
     ///Goes through polygons 3 points at a time, drawing
     ///lines connecting each points to create bounding triangles
     ///====================
-    pub fn draw_polygons(&mut self, polygons: &Matrix, c: Color) {
+    pub fn draw_polygons(&mut self, polygons: &Matrix, c: &Color, view: &mut Vec<f32>, ambient_color: &Color, point_light_vector: &mut Vec<f32>, point_light_color: &Color, ambient_reflect: &ReflectionValue, direct_reflect: &ReflectionValue, specular_reflect: &ReflectionValue) {
         for i in (0..polygons.matrix_array[0].len()).step_by(3) {
-            if polygons.calculate_normal(i) > 0.0 {
+            let normal = &mut polygons.calculate_normal(i);
+            if normal[2] > 0.0 {
                 // self.draw_line(
                 //     polygons.matrix_array[0][i] as i32,
                 //     polygons.matrix_array[1][i] as i32,
@@ -176,6 +178,7 @@ impl Image {
                 //     polygons.matrix_array[2][i] as f32,
                 //     c,
                 // );
+                let color = &get_lighting(normal, view, ambient_color, point_light_color, point_light_vector, ambient_reflect, direct_reflect, specular_reflect);
                 self.scanline_convert(
                     polygons.matrix_array[0][i],
                     polygons.matrix_array[1][i],
@@ -186,6 +189,7 @@ impl Image {
                     polygons.matrix_array[0][i + 2],
                     polygons.matrix_array[1][i + 2],
                     polygons.matrix_array[2][i + 2],
+                    color
                 )
             }
         }
@@ -200,10 +204,10 @@ impl Image {
 
     Color should be set differently for each polygon.
     ====================*/
-    fn scanline_convert(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
+    fn scanline_convert(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32, color: &Color) {
         let mut polygons = [(x0, y0, z0), (x1, y1, z1), (x2, y2, z2)];
         polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32, k.2 as i32));
-        println!("{:?}", polygons);
+        // println!("{:?}", polygons);
         let mut past_midpoint = false;
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
@@ -219,8 +223,6 @@ impl Image {
         if (polygons[2].1 - polygons[1].1) as i32 == 0{
             past_midpoint = true
         }
-        let mut rng = rand::thread_rng();
-        let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
         // for y in y0 as i32..=y0 as i32+1 {
         for y in y0 as i32..=polygons[2].1 as i32{
             self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);

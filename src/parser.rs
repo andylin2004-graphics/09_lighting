@@ -1,3 +1,4 @@
+use crate::ReflectionValue;
 use crate::color::Color;
 use crate::image::Image;
 use crate::matrix::CurveType;
@@ -73,7 +74,14 @@ pub fn parse_file(
     points: &mut Matrix,
     polygons: &mut Matrix,
     screen: &mut Image,
-    color: Color,
+    color: &Color,
+    view: &mut Vec<f32>,
+    ambient_color: &Color,
+    point_light_vector: &mut Vec<f32>,
+    point_light_color: &Color,
+    ambient_reflect: &ReflectionValue,
+    specular_reflect: &ReflectionValue,
+    direct_reflect: &ReflectionValue
 ) -> io::Result<()> {
     let file = File::open(&fname)?;
     let reader = BufReader::new(file);
@@ -271,7 +279,7 @@ pub fn parse_file(
                     params[0], params[1], params[2], params[3], params[4], params[5],
                 );
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color);
+                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
 
                 *polygons = Matrix::new(0,0);
             }
@@ -284,7 +292,7 @@ pub fn parse_file(
 
                 polygons.add_sphere(params[0], params[1], params[2], params[3], 20);
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color);
+                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
 
                 *polygons = Matrix::new(0,0);
             }
@@ -297,7 +305,7 @@ pub fn parse_file(
 
                 polygons.add_torus(params[0], params[1], params[2], params[3], params[4], 20);
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color);
+                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
 
                 *polygons = Matrix::new(0,0);
             }

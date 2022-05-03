@@ -23,7 +23,7 @@ impl Image {
         }
     }
 
-    pub fn plot(&mut self, x: i32, y: i32, mut z: f32, color: Color) -> bool{
+    pub fn plot(&mut self, x: i32, y: i32, mut z: f32, color: &Color) -> bool{
         z = (z as i32 * 10000) as f32 / 10000.0;
         if x >= 0 && y >= 0 && x < self.width as i32 && y < self.height as i32{
             if z >= self.z_buffer[(self.height - 1) - y as usize][x as usize] {

@@ -16,7 +16,7 @@ impl Color{
         Color{r: r, g: g, b: b}
     }
     
-    pub fn plot_color(&mut self, new_color: Color){
+    pub fn plot_color(&mut self, new_color: &Color){
         self.r = new_color.r;
         self.g = new_color.g;
         self.b = new_color.b;

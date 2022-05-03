@@ -47,7 +47,7 @@ pub fn vector_subtraction(lhs: &mut Vec<f32>, rhs: &mut Vec<f32>) -> Vec<f32> {
 impl Matrix {
   //Calculate the surface normal for the triangle whose first
   //point is located at index i in polygons
-  pub fn calculate_normal(&self, i: usize) -> f32 {
+  pub fn calculate_normal(&self, i: usize) -> Vec<f32> {
     let x0 = self.matrix_array[0][i];
     let y0 = self.matrix_array[1][i];
     let z0 = self.matrix_array[2][i];
@@ -63,8 +63,8 @@ impl Matrix {
     let bx = x2 - x0;
     let by = y2 - y0;
     let bz = z2 - z0;
-    let n = vec![ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
-    return dot_product(&n, &consts::view);
+    return vec![ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
+    // return dot_product(&n, &consts::view);
   }
 }
 
