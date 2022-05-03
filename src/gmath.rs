@@ -1,6 +1,7 @@
 use crate::Color;
 use crate::Matrix;
 use crate::ReflectionValue;
+use crate::consts;
 use std::cmp;
 use std::ops::Add;
 
@@ -63,7 +64,7 @@ impl Matrix {
     let by = y2 - y0;
     let bz = z2 - z0;
     let n = vec![ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
-    return dot_product(&n, &crate::view);
+    return dot_product(&n, &consts::view);
   }
 }
 
