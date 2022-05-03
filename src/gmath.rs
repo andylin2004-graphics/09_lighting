@@ -3,7 +3,6 @@ use crate::Matrix;
 use crate::ReflectionValue;
 use std::cmp;
 use std::ops::Add;
-use std::ops::Mul;
 
 //vector functions
 //normalize vector, should modify the parameter
@@ -64,8 +63,7 @@ impl Matrix {
     let by = y2 - y0;
     let bz = z2 - z0;
     let n = vec![ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
-    let v = vec![0.0, 0.0, 1.0];
-    return dot_product(&n, &v);
+    return dot_product(&n, &crate::view);
   }
 }
 
@@ -92,15 +90,15 @@ impl Add for Color {
 }
 
 /*============================================
-IMPORANT NOTE
+IMPORTANT NOTE
 
-Ambient light is represeneted by a color value
+Ambient light is represented by a color value
 
 Point light sources are 2D arrays of doubles.
      - The fist index (LOCATION) represents the vector to the light.
      - The second index (COLOR) represents the color.
 
-Reflection constants (ka, kd, ks) are represened as arrays of
+Reflection constants (ka, kd, ks) are represented as arrays of
 doubles (red, green, blue)
 ============================================*/
 
@@ -125,14 +123,14 @@ pub fn get_lighting(
     diffuse_reflect,
     normal,
   );
-  let speculalar_color = calculate_specular(
+  let specular_color = calculate_specular(
     point_light_vector,
     point_light_color,
     specular_reflect,
     view,
     normal,
   );
-  return ambient_color + diffuse_color + speculalar_color;
+  return ambient_color + diffuse_color + specular_color;
 }
 
 pub fn calculate_ambient(ambient_light: Color, ambient_reflect: ReflectionValue) -> Color {

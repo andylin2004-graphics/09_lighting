@@ -14,6 +14,14 @@ mod matrix;
 mod parser;
 mod reflect;
 
+const ambient: Color = Color::new_color(50, 50, 50);
+const ambient_reflect: ReflectionValue = ReflectionValue::new_values(0.1, 0.1, 0.1);
+const direct_reflect: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+const specular_reflect: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+const point_light_location: Vec<f32> = vec![0.5, 0.75, 1.0];
+const point_light_color: Color = Color::new_color(0, 255, 255);
+const view: Vec<f32> = vec![0.0,0.0,1.0];
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut screen = Image::new(500, 500);
