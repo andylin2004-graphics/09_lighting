@@ -12,7 +12,7 @@ impl ReflectionValue{
         ReflectionValue{r: 0.0, g:0.0, b:0.0}
     }
 
-    pub fn new_color(r: f32, g: f32, b: f32) -> ReflectionValue{
+    pub const fn new_values(r: f32, g: f32, b: f32) -> ReflectionValue{
         ReflectionValue{r: r, g: g, b: b}
     }
 }
