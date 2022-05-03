@@ -69,7 +69,7 @@ impl Matrix {
 }
 
 impl Color {
-  fn color_with_lighting(constant: f32, light_color: Color, reflect: ReflectionValue) -> Color {
+  fn color_with_lighting(constant: f32, light_color: &Color, reflect: &ReflectionValue) -> Color {
     Color {
       r: ((constant * light_color.r as f32 * reflect.r) as i32 % 256) as u8,
       g: ((constant * light_color.g as f32 * reflect.g) as i32 % 256) as u8,
@@ -108,12 +108,12 @@ doubles (red, green, blue)
 pub fn get_lighting(
   normal: &mut Vec<f32>,
   view: &mut Vec<f32>,
-  ambient_light: Color,
-  point_light_color: Color,
+  ambient_light: &Color,
+  point_light_color: &Color,
   point_light_vector: &mut Vec<f32>,
-  ambient_reflect: ReflectionValue,
-  diffuse_reflect: ReflectionValue,
-  specular_reflect: ReflectionValue,
+  ambient_reflect: &ReflectionValue,
+  diffuse_reflect: &ReflectionValue,
+  specular_reflect: &ReflectionValue,
 ) -> Color {
   normalize(normal);
   normalize(point_light_vector);
@@ -134,14 +134,14 @@ pub fn get_lighting(
   return ambient_color + diffuse_color + specular_color;
 }
 
-pub fn calculate_ambient(ambient_light: Color, ambient_reflect: ReflectionValue) -> Color {
+pub fn calculate_ambient(ambient_light: &Color, ambient_reflect: &ReflectionValue) -> Color {
   return Color::color_with_lighting(1.0, ambient_light, ambient_reflect);
 }
 
 pub fn calculate_diffuse(
   normalized_diffuse_light_vector: &mut Vec<f32>,
-  diffuse_light_color: Color,
-  diffuse_reflect: ReflectionValue,
+  diffuse_light_color: &Color,
+  diffuse_reflect: &ReflectionValue,
   normalized_normal: &mut Vec<f32>,
 ) -> Color {
   let n_l_dot_product_times = dot_product(normalized_normal, normalized_diffuse_light_vector);
@@ -150,8 +150,8 @@ pub fn calculate_diffuse(
 
 pub fn calculate_specular(
   normalized_specular_light_vector: &mut Vec<f32>,
-  specular_light_color: Color,
-  specular_reflect: ReflectionValue,
+  specular_light_color: &Color,
+  specular_reflect: &ReflectionValue,
   view: &mut Vec<f32>,
   normalized_normal: &mut Vec<f32>,
 ) -> Color {
