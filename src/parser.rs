@@ -3,6 +3,7 @@ use crate::color::Color;
 use crate::image::Image;
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
+use crate::consts;
 use std::f32;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
@@ -210,7 +211,7 @@ pub fn parse_file(
                     params.push(input.parse().unwrap());
                 }
 
-                points.add_circle(params[0], params[1], params[2], params[3], 100);
+                points.add_circle(params[0], params[1], params[2], params[3], consts::STEP_2D);
                 points.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_lines(&points, color);
 
@@ -232,7 +233,7 @@ pub fn parse_file(
                     params[5],
                     params[6],
                     params[7],
-                    100,
+                    consts::STEP_2D,
                     &CurveType::Hermite,
                 );
                 points.multiply_matrixes(cstack.last().unwrap());
@@ -256,7 +257,7 @@ pub fn parse_file(
                     params[5],
                     params[6],
                     params[7],
-                    100,
+                    consts::STEP_2D,
                     &CurveType::Bezier,
                 );
                 points.multiply_matrixes(cstack.last().unwrap());
@@ -290,7 +291,7 @@ pub fn parse_file(
                     params.push(input.parse().unwrap());
                 }
 
-                polygons.add_sphere(params[0], params[1], params[2], params[3], 20);
+                polygons.add_sphere(params[0], params[1], params[2], params[3], consts::STEP_3D);
                 polygons.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
 
@@ -303,7 +304,7 @@ pub fn parse_file(
                     params.push(input.parse().unwrap());
                 }
 
-                polygons.add_torus(params[0], params[1], params[2], params[3], params[4], 20);
+                polygons.add_torus(params[0], params[1], params[2], params[3], params[4], consts::STEP_3D);
                 polygons.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
 

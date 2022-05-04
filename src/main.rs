@@ -18,13 +18,15 @@ pub mod consts{
     use crate::color::Color;
     use crate::reflect::ReflectionValue; 
 
-    pub const ambient_color: Color = Color::new_color(50, 50, 50);
-    pub const ambient_reflect: ReflectionValue = ReflectionValue::new_values(0.1, 0.1, 0.1);
-    pub const direct_reflect: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
-    pub const specular_reflect: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
-    pub const point_light_location: [f32; 3] = [0.5, 0.75, 1.0];
-    pub const point_light_color: Color = Color::new_color(0, 255, 255);
-    pub const view: [f32; 3] = [0.0,0.0,1.0];
+    pub const AMBIENT_COLOR: Color = Color::new_color(50, 50, 50);
+    pub const AMBIENT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.1, 0.1, 0.1);
+    pub const DIRECT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+    pub const SPECULAR_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+    pub const POINT_LIGHT_LOCATION: [f32; 3] = [0.5, 0.75, 1.0];
+    pub const POINT_LIGHT_COLOR: Color = Color::new_color(0, 255, 255);
+    pub const VIEW: [f32; 3] = [0.0,0.0,1.0];
+    pub const STEP_2D: i32 = 100;
+    pub const STEP_3D: i32 = 100;
 }
 
 fn main() {
@@ -42,13 +44,13 @@ fn main() {
             &mut polygons,
             &mut screen,
             &color,
-            &mut consts::view.to_vec(),
-            &mut consts::ambient_color,
-            &mut consts::point_light_location.to_vec(),
-            &mut consts::point_light_color,
-            &mut consts::ambient_reflect,
-            &mut consts::specular_reflect,
-            &mut consts::direct_reflect
+            &mut consts::VIEW.to_vec(),
+            &mut consts::AMBIENT_COLOR,
+            &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+            &mut consts::POINT_LIGHT_COLOR,
+            &mut consts::AMBIENT_REFLECT,
+            &mut consts::SPECULAR_REFLECT,
+            &mut consts::DIRECT_REFLECT
         );
     } else {
         parse_file(
@@ -58,13 +60,13 @@ fn main() {
             &mut polygons,
             &mut screen,
             &color,
-            &mut consts::view.to_vec(),
-            &mut consts::ambient_color,
-            &mut consts::point_light_location.to_vec(),
-            &mut consts::point_light_color,
-            &mut consts::ambient_reflect,
-            &mut consts::specular_reflect,
-            &mut consts::direct_reflect
+            &mut consts::VIEW.to_vec(),
+            &mut consts::AMBIENT_COLOR,
+            &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+            &mut consts::POINT_LIGHT_COLOR,
+            &mut consts::AMBIENT_REFLECT,
+            &mut consts::SPECULAR_REFLECT,
+            &mut consts::DIRECT_REFLECT
         );
     }
 }
