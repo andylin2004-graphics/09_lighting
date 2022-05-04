@@ -598,7 +598,7 @@ impl Matrix {
                     + cx;
                 let y =
                     circle_radius * (f32::consts::PI * 2.0 * theta as f32 / step as f32).sin() + cy;
-                let z = -(f32::consts::PI * 2.0 * phi as f32 / step as f32).sin()
+                let z = (f32::consts::PI * 2.0 * phi as f32 / step as f32).sin()
                     * (circle_radius * (f32::consts::PI * 2.0 * theta as f32 / step as f32).cos()
                         + torus_radius)
                     + cz;
