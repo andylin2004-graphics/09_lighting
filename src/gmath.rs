@@ -70,10 +70,13 @@ impl Matrix {
 
 impl Color {
   fn color_with_lighting(constant: f32, light_color: &Color, reflect: &ReflectionValue) -> Color {
+    let r: u8 = if constant * light_color.r as f32 * reflect.r > 255.0 {255} else{(constant * light_color.r as f32 * reflect.r) as u8};
+    let g: u8 = if constant * light_color.g as f32 * reflect.g > 255.0 {255} else{(constant * light_color.g as f32 * reflect.g) as u8};
+    let b: u8 = if constant * light_color.b as f32 * reflect.b > 255.0 {255} else{(constant * light_color.b as f32 * reflect.b) as u8};
     Color {
-      r: ((constant * light_color.r as f32 * reflect.r) as i32 % 256) as u8,
-      g: ((constant * light_color.g as f32 * reflect.g) as i32 % 256) as u8,
-      b: ((constant * light_color.b as f32 * reflect.b) as i32 % 256) as u8,
+      r: r,
+      g: g,
+      b: b,
     }
   }
 }
@@ -82,10 +85,13 @@ impl Add for Color {
   type Output = Self;
 
   fn add(self, other: Self) -> Self {
+    let r: u8 = if self.r as i32 + other.r as i32 > 255 {255} else{self.r + other.r};
+    let g: u8 = if self.g as i32 + other.g as i32 > 255 {255} else{self.g + other.g};
+    let b: u8 = if self.b as i32 + other.b as i32 > 255 {255} else{self.b + other.b};
     Self {
-      r: ((self.r as i32 + other.r as i32) % 256) as u8,
-      g: ((self.g as i32 + other.g as i32) % 256) as u8,
-      b: ((self.b as i32 + other.b as i32) % 256) as u8,
+      r: r,
+      g: g,
+      b: b,
     }
   }
 }
