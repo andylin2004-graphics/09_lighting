@@ -9,7 +9,7 @@ use rand::Rng;
 
 impl Image {
     pub fn draw_line(&mut self, mut x0: i32, mut y0: i32, mut z0: f32, mut x1: i32, mut y1: i32, mut z1: f32, color: &Color) {
-        println!("x0: {}, y0: {}, x1: {}, y1: {}", x0, y0, x1, y1);
+        // println!("x0: {}, y0: {}, x1: {}, y1: {}", x0, y0, x1, y1);
         if (x0 >= 500 &&  x1 >= 500) || (y0 >= 500 && y1 >= 500) || (x0 < 0 &&  x1 < 0) || (y0 < 0 && y1 < 0){
             return;
         }
