@@ -1,9 +1,9 @@
-use crate::ReflectionValue;
 use crate::color::Color;
+use crate::consts;
 use crate::image::Image;
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
-use crate::consts;
+use crate::ReflectionValue;
 use std::f32;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
@@ -82,7 +82,7 @@ pub fn parse_file(
     point_light_color: &Color,
     ambient_reflect: &ReflectionValue,
     specular_reflect: &ReflectionValue,
-    direct_reflect: &ReflectionValue
+    direct_reflect: &ReflectionValue,
 ) -> io::Result<()> {
     let file = File::open(&fname)?;
     let reader = BufReader::new(file);
@@ -108,7 +108,7 @@ pub fn parse_file(
                 points.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_lines(&points, color);
 
-                *points = Matrix::new(0,0);
+                *points = Matrix::new(0, 0);
             }
             // "ident" => {
             //     transform.identity();
@@ -215,7 +215,7 @@ pub fn parse_file(
                 points.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_lines(&points, color);
 
-                *points = Matrix::new(0,0);
+                *points = Matrix::new(0, 0);
             }
             "hermite" => {
                 i += 1;
@@ -239,7 +239,7 @@ pub fn parse_file(
                 points.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_lines(&points, color);
 
-                *points = Matrix::new(0,0);
+                *points = Matrix::new(0, 0);
             }
             "bezier" => {
                 i += 1;
@@ -263,7 +263,7 @@ pub fn parse_file(
                 points.multiply_matrixes(cstack.last().unwrap());
                 screen.draw_lines(&points, color);
 
-                *points = Matrix::new(0,0);
+                *points = Matrix::new(0, 0);
             }
             _ if doc_lines[i].starts_with('#') => {}
             "clear" => {
@@ -280,9 +280,19 @@ pub fn parse_file(
                     params[0], params[1], params[2], params[3], params[4], params[5],
                 );
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
+                screen.draw_polygons(
+                    &polygons,
+                    color,
+                    view,
+                    ambient_color,
+                    point_light_vector,
+                    point_light_color,
+                    ambient_reflect,
+                    direct_reflect,
+                    specular_reflect,
+                );
 
-                *polygons = Matrix::new(0,0);
+                *polygons = Matrix::new(0, 0);
             }
             "sphere" => {
                 i += 1;
@@ -293,9 +303,19 @@ pub fn parse_file(
 
                 polygons.add_sphere(params[0], params[1], params[2], params[3], consts::STEP_3D);
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
+                screen.draw_polygons(
+                    &polygons,
+                    color,
+                    view,
+                    ambient_color,
+                    point_light_vector,
+                    point_light_color,
+                    ambient_reflect,
+                    direct_reflect,
+                    specular_reflect,
+                );
 
-                *polygons = Matrix::new(0,0);
+                *polygons = Matrix::new(0, 0);
             }
             "torus" => {
                 i += 1;
@@ -304,16 +324,33 @@ pub fn parse_file(
                     params.push(input.parse().unwrap());
                 }
 
-                polygons.add_torus(params[0], params[1], params[2], params[3], params[4], consts::STEP_3D);
+                polygons.add_torus(
+                    params[0],
+                    params[1],
+                    params[2],
+                    params[3],
+                    params[4],
+                    consts::STEP_3D,
+                );
                 polygons.multiply_matrixes(cstack.last().unwrap());
-                screen.draw_polygons(&polygons, color, view, ambient_color, point_light_vector, point_light_color, ambient_reflect, direct_reflect, specular_reflect);
+                screen.draw_polygons(
+                    &polygons,
+                    color,
+                    view,
+                    ambient_color,
+                    point_light_vector,
+                    point_light_color,
+                    ambient_reflect,
+                    direct_reflect,
+                    specular_reflect,
+                );
 
-                *polygons = Matrix::new(0,0);
+                *polygons = Matrix::new(0, 0);
             }
-            "push" =>{
+            "push" => {
                 cstack.push(cstack.last().unwrap().clone());
             }
-            "pop" =>{
+            "pop" => {
                 cstack.pop();
             }
             _ => {
@@ -322,5 +359,72 @@ pub fn parse_file(
         }
         i += 1;
     }
+    Ok(())
+}
+
+pub fn parse_obj_file(
+    fname: &str,
+    cstack: &mut Vec<Matrix>,
+    points: &mut Matrix,
+    polygons: &mut Matrix,
+    screen: &mut Image,
+    color: &Color,
+    view: &mut Vec<f32>,
+    ambient_color: &Color,
+    point_light_vector: &mut Vec<f32>,
+    point_light_color: &Color,
+    ambient_reflect: &ReflectionValue,
+    specular_reflect: &ReflectionValue,
+    direct_reflect: &ReflectionValue,
+) -> io::Result<()>{
+    let mut file = File::open(&fname)?;
+    let mut load_options = tobj::LoadOptions::default();
+    load_options.triangulate = true;
+    let (models, materials) = tobj::load_obj(&fname, &load_options).expect("Failed to load the OBJ file");
+    for i in models{
+        for points in (0..i.mesh.positions.len()-(i.mesh.positions.len() % 9)).step_by(9){
+            polygons.add_polygon(
+                i.mesh.positions[points],
+                i.mesh.positions[points+1],
+                i.mesh.positions[points+2],
+                i.mesh.positions[points+3],
+                i.mesh.positions[points+4],
+                i.mesh.positions[points+5],
+                i.mesh.positions[points+6],
+                i.mesh.positions[points+7],
+                i.mesh.positions[points+8],
+            );
+        }
+    }
+    // let stl = stl_io::read_stl(&mut file).unwrap();
+    // for i in (0..stl.vertices.len()-3).step_by(3){
+    //     println!("{}", stl.vertices[i]);
+    //     polygons.add_polygon(
+    //         stl.vertices[i][0],
+    //         stl.vertices[i][1],
+    //         stl.vertices[i][2],
+    //         stl.vertices[i+1][0],
+    //         stl.vertices[i+1][1],
+    //         stl.vertices[i+1][2],
+    //         stl.vertices[i+2][0],
+    //         stl.vertices[i+2][1],
+    //         stl.vertices[i+2][2],
+    //     );
+    // }
+    // // polygons.multiply_matrixes(&Matrix::make_translate(300, 300, 0));
+    polygons.multiply_matrixes(&Matrix::make_scale(5.0, 5.0, 5.0));
+    polygons.multiply_matrixes(&Matrix::make_rot_x(30.0));
+    screen.draw_polygons(
+        &polygons,
+        color,
+        view,
+        ambient_color,
+        point_light_vector,
+        point_light_color,
+        ambient_reflect,
+        direct_reflect,
+        specular_reflect,
+    );
+    screen.display();
     Ok(())
 }
