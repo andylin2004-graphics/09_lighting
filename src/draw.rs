@@ -216,12 +216,12 @@ impl Image {
         let d0 = (polygons[2].1 as i32 - polygons[0].1 as i32) + 1;
         let d1 = (polygons[1].1 as i32 - polygons[0].1 as i32) + 1;
         let d2 = (polygons[2].1 as i32 - polygons[1].1 as i32) + 1;
-        let dx0 = if d0 > 0 {(polygons[2].0 - polygons[0].0) / (d0) as f32} else {0.0};
-        let dz0 = if d0 > 0 {(polygons[2].2 - polygons[0].2) / (d0) as f32} else {0.0};
-        let mut dx1 = if d1 > 0 {(polygons[1].0 - polygons[0].0) / (d1) as f32} else {0.0};
-        let mut dz1 = if d1 > 0 {(polygons[1].2 - polygons[0].2) / (d1) as f32} else {0.0};
-        let dx1_1 = if d2 > 0 {(polygons[2].0 - polygons[1].0) / (d2) as f32} else {0.0};
-        let dz1_1 = if d2 > 0 {(polygons[2].2 - polygons[1].2) / (d2) as f32} else {0.0};
+        let dx0 = if d0 > 0 {(polygons[2].0 - polygons[0].0) / d0 as f32} else {0.0};
+        let dz0 = if d0 > 0 {(polygons[2].2 - polygons[0].2) / d0 as f32} else {0.0};
+        let mut dx1 = if d1 > 0 {(polygons[1].0 - polygons[0].0) / d1 as f32} else {0.0};
+        let mut dz1 = if d1 > 0 {(polygons[1].2 - polygons[0].2) / d1 as f32} else {0.0};
+        let dx1_1 = if d2 > 0 {(polygons[2].0 - polygons[1].0) / d2 as f32} else {0.0};
+        let dz1_1 = if d2 > 0 {(polygons[2].2 - polygons[1].2) / d2 as f32} else {0.0};
         if (polygons[2].1 - polygons[1].1) as i32 == 0{
             past_midpoint = true
         }
@@ -234,7 +234,7 @@ impl Image {
                 z1 = polygons[1].2;
                 past_midpoint = true;
             }
-            self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);
+            self.draw_line(x0 as i32, y, z0, x1 as i32, y, z1, color);
             x0 += dx0;
             x1 += dx1;
             z0 += dz0;
